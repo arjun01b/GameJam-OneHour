@@ -357,10 +357,10 @@ MonoBehaviour:
   m_Name: FMODStudioSettings
   m_EditorClassIdentifier: 
   switchSettingsMigration: 1
-  HasSourceProject: 0
-  HasPlatforms: 0
-  sourceProjectPath: 
-  sourceBankPath: 
+  HasSourceProject: 1
+  HasPlatforms: 1
+  sourceProjectPath: FmodProjTry/FmodFirstProj/FmodFirstProj.fspro
+  sourceBankPath: FmodProjTry/FmodFirstProj/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -395,7 +395,7 @@ MonoBehaviour:
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
   CurrentVersion: 131609
-  HideSetupWizard: 0
+  HideSetupWizard: 1
   LastEventReferenceScanVersion: 131609
   Platforms:
   - {fileID: 1467485136384472811}
