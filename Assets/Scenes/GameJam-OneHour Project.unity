@@ -5811,6 +5811,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 52e2b59574448164c980a2ad7269d709, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 36faec8893fcede4e8c4e16b486ca685, type: 2}
     - target: {fileID: 919132149155446097, guid: 52e2b59574448164c980a2ad7269d709, type: 3}
       propertyPath: m_Name
       value: BK_Curtains (5)
@@ -13592,6 +13596,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 52e2b59574448164c980a2ad7269d709, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 36faec8893fcede4e8c4e16b486ca685, type: 2}
     - target: {fileID: 919132149155446097, guid: 52e2b59574448164c980a2ad7269d709, type: 3}
       propertyPath: m_Name
       value: BK_Curtains (4)
@@ -18576,6 +18584,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 52e2b59574448164c980a2ad7269d709, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 36faec8893fcede4e8c4e16b486ca685, type: 2}
     - target: {fileID: 919132149155446097, guid: 52e2b59574448164c980a2ad7269d709, type: 3}
       propertyPath: m_Name
       value: BK_Curtains (1)
@@ -31782,6 +31794,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 52e2b59574448164c980a2ad7269d709, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 36faec8893fcede4e8c4e16b486ca685, type: 2}
     - target: {fileID: 919132149155446097, guid: 52e2b59574448164c980a2ad7269d709, type: 3}
       propertyPath: m_Name
       value: BK_Curtains
