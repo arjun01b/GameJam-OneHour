@@ -491,10 +491,10 @@ MonoBehaviour:
   m_Name: FMODStudioSettings
   m_EditorClassIdentifier: 
   switchSettingsMigration: 1
-  HasSourceProject: 0
+  HasSourceProject: 1
   HasPlatforms: 1
   sourceProjectPath: ../../Fmod Project Try/fmod-audio-system/fmod-audio-system.fspro
-  sourceBankPath: ../../Fmod Project Try/fmod-audio-system/Metadata/Bank
+  sourceBankPath: ../../Fmod Project Try/fmod-audio-system/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
