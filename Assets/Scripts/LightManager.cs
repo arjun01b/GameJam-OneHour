@@ -25,10 +25,10 @@ public class LightManager : MonoBehaviour
 
     List<Light> myLights;
 
-    [Range(0, 1)] public float lightIntensityMultiplier = 1;
-    [SerializeField][Range(0, 1)] float lightMaxFlickeringIntensity = 0.1f;
-    [SerializeField][Range(0, 20)] float waveVelocity = Mathf.PI * 3;
-    [SerializeField][Range(0, Mathf.PI)] float waveDisplacement = 1;
+    [Range(0, 1)] public float lightIntensityMultiplier = 0.86f;
+    [SerializeField][Range(0, 1)] float lightMaxFlickeringIntensity = 0.05f;
+    [SerializeField][Range(0, 20)] float waveVelocity = 8;
+    [SerializeField][Range(0, Mathf.PI)] float waveDisplacement = 0.97f;
 
     private float sinePosition = 0;
 
