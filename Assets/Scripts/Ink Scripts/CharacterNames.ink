@@ -1,0 +1,7 @@
+VAR char0 = "Ben"
+VAR char1 = "Jane"
+VAR char2 = "Holden" 
+VAR char3 = "Cole"
+VAR char4 = "Lilly"
+VAR driver = "Hendriks"
+VAR futchar0 = "Future Ben"
