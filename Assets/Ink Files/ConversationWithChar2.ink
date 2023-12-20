@@ -1,5 +1,4 @@
 === char2conversation ===
-~ hasTalkedToChar2 = true
 {char2} enters the room, his heavy boots causing the floorboards to squeak.
 {char0}: Hello, Holden.
 {char2}: Benjamin! It's good to see you.
@@ -44,10 +43,13 @@
         -> willReading
 
 = willReading
+~ hasTalkedToChar2 = true
 I glance through the the will, it reads:
 "To my son Holden, I leave my wedding ring, to which he's so fondly attached..." //DevNote: Is there a way to italicize text?
-Now what I give Holden might lead to or away from the events of the vision, what should I tell him?
+
 {char0}: Alright so here it says...
+What should I give him?
+
     *   {isRingAvailible} [Give the ring]
         {char0}: To my son Holden, I leave my wedding ring, to which he's so fondly attached...
         {char2}: YES! It was the only thing I wanted! Thank you father!
@@ -90,7 +92,7 @@ Now what I give Holden might lead to or away from the events of the vision, what
         {char0}: I don't know.
         {char2}: He wanted me to make my own path in life?
         {char2}: But haven't I been doing that?
-        {char2} Looks down at the ring around his neck , holding it as he leaves, looking brokenhearted and lost.
+        {char2} Looks down at the ring around his neck, holding it as he leaves, looking brokenhearted and lost.
         -> afterConversation.beforeClock
         
     *  [Tell him someone else got the ring.]
@@ -121,15 +123,35 @@ Now what I give Holden might lead to or away from the events of the vision, what
             -> afterConversation.beforeClock
 
 
-// This is used when Holden walks into the room as Ben is finishing his conversation with Cole after he hid from him under the desk. It should be a confrontation and an automatic skip to the will reading part of the conversation.
-
 = char2_hideUnderDesk
+{char2} enters the room, his heavy boots causing the floorboards to squeak.
+I silently pray he doesn't notice me...
+{char2}: Benjamin? Are you here?
+{char2}: Huh... Maybe he left to get some water.
+{char2}: I should check in the kitchen.
+I hear him leaving, the squeaking boards following his footsteps.
+I breathe a sigh of relief.
+~ succesfullyHidFromChar2 = true
+-> afterConversation.beforeClock
+
+
+= char2_returns
+// This is used when Holden walks into the room as Ben is finishing his conversation with Cole after he hid from him under the desk. It should be a confrontation and an automatic skip to the will reading part of the conversation.
+{char2} barges in, startling both {char3} and me.
 {char2}: There you are! Where did you go?
 {char0}: Nowhere! I was right here.
-
+{char3conversation.char3_hideUnderDesk: //if char0 hid from Cole
+    {char3}: (Snickers) I guess you succeeded in hiding from this dolt.
+    {char2}: What?
+}
+{not char3conversation.char3_hideUnderDesk: //if char0 did not hide from Cole
+    {char3}: You idiot, there aren't any other doors in this room.
+    {char3}: If he had left, you'd have seen him.
+}
 //if Cole discovered him hiding, he comments something about it, else he comments about Holden being stupid.
-//{char0}: Don't mind him Holden, you're here for the will aren't you?
-//{char2}: Ah, yes...
-
+{char0}: Don't mind him {char2}, you're here for the will aren't you?
+{char2}: Ah, yes...
+{char0}: {char3}, if you could—
+{char3}: (Scoffs) I can show myself out.
+He leaves, closing the door behind him.
 -> willReading
-// -> char2conversation
