@@ -26,21 +26,21 @@ public class DialogueManager : MonoBehaviour
     #endregion
 
     [Header("Configuration")]
-    [SerializeField] bool instantText = true;
-    [SerializeField] [Range(1, 100)] int charactersPerSecond = 15;
+    [SerializeField] protected bool instantText = true;
+    [SerializeField] [Range(1, 100)] protected int charactersPerSecond = 15;
     // This would only be used when instantText is disabled.
 
     [Header("Supporting Scripts")]
-    [SerializeField] GameObject dialogueTextScript_Holder;
-    [SerializeField] GameObject dialogueOptionsScript_Holder;
-    [SerializeField] GameObject tagManagerScript_Holder;
-    IDialogueTextDisplayable dialogueTextScript;
-    IDialogueOptionsDisplayable dialogueOptionsScript;
-    IInkTagActionable tagManagerScript;
+    [SerializeField] protected GameObject dialogueTextScript_Holder;
+    [SerializeField] protected GameObject dialogueOptionsScript_Holder;
+    [SerializeField] protected GameObject tagManagerScript_Holder;
+    protected IDialogueTextDisplayable dialogueTextScript;
+    protected IDialogueOptionsDisplayable dialogueOptionsScript;
+    protected IInkTagActionable tagManagerScript;
 
-    private void FillScriptReferences()
+    protected virtual void FillScriptReferences()
     {
-        if(dialogueTextScript_Holder == null)
+        if (dialogueTextScript_Holder == null)
         {
             Debug.LogError("dialogueTextScript_Holder cannot be equal to NULL if the DialogueManager is used.");
             return;
@@ -93,10 +93,10 @@ public class DialogueManager : MonoBehaviour
 
 
     [Header("Availible Ink Files")]
-    [SerializeField] TextAsset[] inkFiles;
+    [SerializeField] protected TextAsset[] inkFiles;
 
 
-    Story activeStory = null;
+    protected Story activeStory = null;
     public bool isDialogueActive { get => activeStory == null; }
 
 
@@ -107,13 +107,13 @@ public class DialogueManager : MonoBehaviour
     }
 
 
-    #region
+    #region Story Controls
 
     /// <summary>
     /// Sends the next chunck of text or set of options to the Script that displays them.
     /// If there is no story to display, it creates a new one.
     /// </summary>
-    public void ContinueStory()
+    public virtual void ContinueStory()
     {
         // If our story is missing or finished.
         if (activeStory == null || (!activeStory.canContinue && activeStory.currentChoices.Count == 0))
@@ -192,23 +192,58 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void StopStory()
+    /// <summary>
+    /// Deletes the last story. Calling ContinueStory() afterwards will result in a new story being started.
+    /// </summary>
+    public virtual void StopStory()
     {
         activeStory = null;
+    }
+
+    /// <summary>
+    /// Selects which choice players have made and continues the story with it.
+    /// </summary>
+    /// <param name="choiceMade"></param>
+    public virtual void ChoiceMade(Choice choiceMade)
+    {
+        if(activeStory == null)
+        {
+            Debug.LogError("Cannot call ChoiceMade() when the story is no longer active.");
+            return;
+        }
+
+        if (activeStory.currentChoices.Count == 0)
+        {
+            Debug.LogError("Cannot call ChoiceMade() when no choices are currently availible.");
+            return;
+        }
+
+        for(int i = 0; i < activeStory.currentChoices.Count; i++)
+        {
+            if (activeStory.currentChoices[i] == choiceMade)
+            {
+                activeStory.ChooseChoiceIndex(i);
+                dialogueOptionsScript.DisableOptions();
+                ContinueStory();
+                return;
+            }
+        }
+
+        Debug.LogError("Choice [" + choiceMade.text + "] was not found among the possible choices list.");
     }
 
     #endregion
 
     #region Managing the Ink Files.
 
-    int nextStoryIdToDisplay = 0;
+    protected int nextStoryIdToDisplay = 0;
 
     protected virtual TextAsset ObtainNewStory()
     {
         return inkFiles[nextStoryIdToDisplay];
     }
 
-    public void ChangeWhichStoryToDisplayNext(int newStoryId)
+    public virtual void ChangeWhichStoryToDisplayNext(int newStoryId)
     {
         if(inkFiles.Length - 1 < newStoryId)
         {
