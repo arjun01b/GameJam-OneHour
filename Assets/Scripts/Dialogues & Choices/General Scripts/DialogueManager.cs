@@ -27,8 +27,10 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Configuration")]
     [SerializeField] protected bool instantText = true;
+
+    [Tooltip("If [Instant Text] is disabled, characters in the dialogue text appear at this speed.")]
     [SerializeField] [Range(1, 100)] protected int charactersPerSecond = 15;
-    // This would only be used when instantText is disabled.
+
 
     [Header("Supporting Scripts")]
     [SerializeField] protected GameObject dialogueTextScript_Holder;
@@ -37,6 +39,18 @@ public class DialogueManager : MonoBehaviour
     protected IDialogueTextDisplayable dialogueTextScript;
     protected IDialogueOptionsDisplayable dialogueOptionsScript;
     protected IInkTagActionable tagManagerScript;
+
+
+    [Header("Availible Ink Files")]
+    [SerializeField] protected TextAsset[] inkFiles;
+
+
+    [Header("Characters")]
+    [SerializeField] protected bool trimCharacterNamesBeforeText;
+
+    [Tooltip("The character names used in the story.")]
+    public List<string> characterNames = new List<string>();
+
 
     protected virtual void FillScriptReferences()
     {
@@ -92,10 +106,6 @@ public class DialogueManager : MonoBehaviour
     }
 
 
-    [Header("Availible Ink Files")]
-    [SerializeField] protected TextAsset[] inkFiles;
-
-
     protected Story activeStory = null;
     public bool isDialogueActive { get => activeStory == null; }
 
@@ -115,7 +125,7 @@ public class DialogueManager : MonoBehaviour
     /// </summary>
     public virtual void ContinueStory()
     {
-        // If our story is missing or finished.
+        // Checking if our story is missing or finished.
         if (activeStory == null || (!activeStory.canContinue && activeStory.currentChoices.Count == 0))
         {
             TextAsset storyAsset = ObtainNewStory();
@@ -129,7 +139,7 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
-        // If we have unresolved choices.
+        // And if we have unresolved choices.
         else if (!activeStory.canContinue && activeStory.currentChoices.Count != 0)
         {
             Debug.LogError("Trying to continue the story but there are currently unresolved choices to pick from.");
@@ -138,6 +148,9 @@ public class DialogueManager : MonoBehaviour
 
 
         string newText = activeStory.Continue();
+
+        // Trimming the new Text and sending the info to the Tag Manager.
+        newText = TrimCharacterNamesFromText(newText);
 
 
         // Acting on whatever #tags were found in the new Ink line.
@@ -254,6 +267,51 @@ public class DialogueManager : MonoBehaviour
         }
 
         nextStoryIdToDisplay = newStoryId;
+    }
+
+    #endregion
+
+    #region Trimming character names
+
+    /// <summary>
+    /// Searches and trims character names at the beginning of text (Format used: "Name: " + "Actual Text").
+    /// If a name is found, it is stored, removed from the text, and processed.
+    /// </summary>
+    /// <param name="originalText">The text to be trimmed.</param>
+    /// <param name="sendCharacterNamesToTagManager">Whether the trimmed names should be sent to the Tag Manager.
+    /// This also includes if no Character Name was found. Enabled by default.</param>
+    /// <returns>A string without the outlined character names.</returns>
+    protected string TrimCharacterNamesFromText(string originalText, bool sendCharacterNamesToTagManager = true)
+    {
+        if((characterNames == null || characterNames.Count == 0) && trimCharacterNamesBeforeText)
+        {
+            Debug.LogWarning("The Character Names cannot be trimmed from the text if " +
+                "no Names are stored in the characterNames List<string>." +
+                "\nDisable trimCharacterNamesBeforeText or add Character Names to the List." +
+                "\nTemporarily disabling Name Trimming.");
+            trimCharacterNamesBeforeText = false;
+            return originalText;
+        }
+
+        string resultString = originalText;
+        string characterName = "";
+
+        foreach (string name in characterNames)
+        {
+            string fullStringToTrim = name + ": ";
+
+            if (originalText.StartsWith(fullStringToTrim))
+            {
+                resultString = originalText.Remove(0, fullStringToTrim.Length);
+                characterName = name;
+                break;
+            }
+        }
+
+        if (sendCharacterNamesToTagManager)
+            tagManagerScript.ActOnInkTag("character", characterName);
+
+        return resultString;
     }
 
     #endregion

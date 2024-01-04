@@ -20,6 +20,11 @@ public class DialogueTextDisplayController : MonoBehaviour, IDialogueTextDisplay
 
     #endregion
 
+    private void Awake()
+    {
+        MyText.text = "";
+    }
+
     public void DisplayText(string stringToDisplay)
     {
         MyText.text = stringToDisplay;

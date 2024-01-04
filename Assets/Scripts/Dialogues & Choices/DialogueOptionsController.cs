@@ -66,4 +66,11 @@ public class DialogueOptionsController : MonoBehaviour, IDialogueOptionsDisplaya
             choiceButton.ApplyNewChoice(newChoice);
         }
     }
+
+
+    #region Managing Button and Text Size
+
+
+
+    #endregion
 }

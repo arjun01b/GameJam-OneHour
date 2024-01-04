@@ -10,7 +10,7 @@ public class ChoiceButton : MonoBehaviour
     #region Self-Initialized Variables
 
     Button _myButton;
-    Button MyButton
+    public Button MyButton
     {
         get
         {
