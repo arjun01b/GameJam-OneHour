@@ -1825,8 +1825,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe5b4fb43df050c4f86b7cba00620758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  instantText: 1
-  charactersPerSecond: 15
+  instantText: 0
+  textSpeedUpMode: 6
+  charactersPerSecond: 50
   dialogueTextScript_Holder: {fileID: 693622586}
   dialogueOptionsScript_Holder: {fileID: 693622586}
   tagManagerScript_Holder: {fileID: 117558058}
@@ -1836,6 +1837,12 @@ MonoBehaviour:
   characterNames:
   - Hendriks
   - Ben
+  - Jane
+  - Holden
+  - Cole
+  - Cole
+  - Lilly
+  - Future Ben
 --- !u!114 &117558061
 MonoBehaviour:
   m_ObjectHideFlags: 0

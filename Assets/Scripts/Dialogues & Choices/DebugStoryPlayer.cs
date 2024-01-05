@@ -8,6 +8,6 @@ public class DebugStoryPlayer : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
-            DialogueManager.instance.ContinueStory();
+            DialogueManager.instance.UserClickedContinue();
     }
 }

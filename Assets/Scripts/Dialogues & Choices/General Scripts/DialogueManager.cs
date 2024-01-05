@@ -2,6 +2,7 @@ using Ink;
 using Ink.Runtime;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DialogueManager : MonoBehaviour
@@ -27,6 +28,8 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Configuration")]
     [SerializeField] protected bool instantText = true;
+    protected enum SpedUpTextSpeed { none, x2, x3, x4, x5, x6, instant };
+    [SerializeField] protected SpedUpTextSpeed textSpeedUpMode = SpedUpTextSpeed.x2;
 
     [Tooltip("If [Instant Text] is disabled, characters in the dialogue text appear at this speed.")]
     [SerializeField] [Range(1, 100)] protected int charactersPerSecond = 15;
@@ -120,10 +123,33 @@ public class DialogueManager : MonoBehaviour
     #region Story Controls
 
     /// <summary>
+    /// Called when users click to continue our story. If users are not using instant text and the text display 
+    /// is not yet complete, this will speed it up.
+    /// </summary>
+    public virtual void UserClickedContinue()
+    {
+        // If we don't have text animation, or that animation is over, we can continue our story.
+        if (instantText || active_TextDisplay_AnimationCoroutine == null)
+        {
+            ContinueStory();
+            return;
+        }
+
+        // If our text display animation is running but we are operation at our regular speed, we speed up.
+        if(isTextSpeedingUp == false && textSpeedUpMode != SpedUpTextSpeed.none)
+        {
+            BeginTextDisplaySpeedUp();
+            return;
+        }
+
+        // Maybe play a "cannot speed up more" sound here?
+    }
+
+    /// <summary>
     /// Sends the next chunck of text or set of options to the Script that displays them.
     /// If there is no story to display, it creates a new one.
     /// </summary>
-    public virtual void ContinueStory()
+    protected virtual void ContinueStory()
     {
         // Checking if our story is missing or finished.
         if (activeStory == null || (!activeStory.canContinue && activeStory.currentChoices.Count == 0))
@@ -193,15 +219,7 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
-            ////////////////////////////////////////////////////////
-            Debug.LogError("Non-instant text not yet implemented.");
-            ////////////////////////////////////////////////////////
-            
-            instantText = false;
-            dialogueTextScript.DisplayText(newText);
-
-            if (activeStory.currentChoices.Count > 0)
-                dialogueOptionsScript.DisplayOptions(activeStory.currentChoices.ToArray());
+            BeginTextDisplayAnimation(newText);
         }
     }
 
@@ -243,6 +261,100 @@ public class DialogueManager : MonoBehaviour
         }
 
         Debug.LogError("Choice [" + choiceMade.text + "] was not found among the possible choices list.");
+    }
+
+    #endregion
+
+    #region Text animations
+
+    protected void BeginTextDisplayAnimation(string text)
+    {
+        if(active_TextDisplay_AnimationCoroutine != null)
+        {
+            Debug.LogError("Should not be starting a Text Display Animation " +
+                "while the previous animation is still running.");
+            StopCoroutine(active_TextDisplay_AnimationCoroutine);
+            active_TextDisplay_AnimationCoroutine = null;
+        }
+
+        isTextSpeedingUp = false;
+
+        active_TextDisplay_AnimationCoroutine = StartCoroutine(TextDisplayAnimation(text));
+    }
+
+    protected void BeginTextDisplaySpeedUp() => isTextSpeedingUp = true;
+
+
+    protected Coroutine active_TextDisplay_AnimationCoroutine = null;
+    protected virtual IEnumerator TextDisplayAnimation(string textToAnimate)
+    {
+        int targetCharsToDisplay = textToAnimate.Length;
+        int numberOfCharsDisplayed = 0;
+
+        while (numberOfCharsDisplayed < targetCharsToDisplay)
+        {
+            // If we are asked to print our string instantly, we break the loop.
+            if(isTextSpeedingUp == true && textSpeedUpMode == SpedUpTextSpeed.instant)
+            {
+                dialogueTextScript.DisplayText(textToAnimate);
+                break;
+            }
+
+            // Every new loop, we increase the number of characters we display.
+            numberOfCharsDisplayed++;
+
+            // We then check how many characters we release.
+            string updatedText = textToAnimate;
+            if (numberOfCharsDisplayed < targetCharsToDisplay)
+                updatedText = updatedText.Remove(numberOfCharsDisplayed);
+
+            // And send them.
+            dialogueTextScript.DisplayText(updatedText);
+
+            float numberOfSecondsBeforeNextCharacter = 1 / (charactersPerSecond * TextSpeedUpMultiplier);
+            yield return new WaitForSecondsRealtime(numberOfSecondsBeforeNextCharacter);
+        }
+
+        // Checking for possible choices.
+        if (activeStory.currentChoices.Count > 0)
+            dialogueOptionsScript.DisplayOptions(activeStory.currentChoices.ToArray());
+
+        active_TextDisplay_AnimationCoroutine = null;
+    }
+
+    protected bool isTextSpeedingUp = false;
+    protected float TextSpeedUpMultiplier
+    {
+        get
+        {
+            if (isTextSpeedingUp == false)
+                return 1;
+
+            // Speed Up multiplier values.
+            switch (textSpeedUpMode)
+            {
+                case SpedUpTextSpeed.none:
+                    return 1;
+                case SpedUpTextSpeed.instant:
+                    return 1;
+
+                case SpedUpTextSpeed.x2:
+                    return 2;
+                case SpedUpTextSpeed.x3:
+                    return 3;
+                case SpedUpTextSpeed.x4:
+                    return 4;
+                case SpedUpTextSpeed.x5:
+                    return 5;
+                case SpedUpTextSpeed.x6:
+                    return 6;
+
+                default:
+                    Debug.LogWarning("Speed Up Mode not recognised." +
+                        "\nCannot get correct value for TextSpeedUpMultiplier");
+                    return 1;
+            }
+        }
     }
 
     #endregion
