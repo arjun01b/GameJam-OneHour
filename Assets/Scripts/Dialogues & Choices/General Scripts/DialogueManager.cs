@@ -203,9 +203,9 @@ public class DialogueManager : MonoBehaviour
 
             // Sending the tag to be evaluated.
             if (value == "")
-                tagManagerScript.ActOnInkTag(key);
+                tagManagerScript.ActOnTag(key);
             else
-                tagManagerScript.ActOnInkTag(key, value);
+                tagManagerScript.ActOnTag(key, value);
         }
 
 
@@ -421,7 +421,7 @@ public class DialogueManager : MonoBehaviour
         }
 
         if (sendCharacterNamesToTagManager)
-            tagManagerScript.ActOnInkTag("character", characterName);
+            tagManagerScript.ActOnTag("character", characterName);
 
         return resultString;
     }

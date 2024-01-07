@@ -6,6 +6,7 @@ public class DialogueTagController : MonoBehaviour, IInkTagActionable
 {
     [Header("References")]
     [SerializeField] CharacterNameController characterNameController;
+    [SerializeField] CharacterPortraitsController characterPortraitsController;
     
     #region Self-Initialized Variables
 
@@ -23,7 +24,7 @@ public class DialogueTagController : MonoBehaviour, IInkTagActionable
 
     #endregion
 
-    public void ActOnInkTag(string key, string value = "")
+    public void ActOnTag(string key, string value = "")
     {
         switch (key)
         {
@@ -42,18 +43,28 @@ public class DialogueTagController : MonoBehaviour, IInkTagActionable
         }
     }
 
-    #region Private Methods
+    #region Character Changes
 
     private void HandleNewCharacter(string newCharacter)
     {
-        if(newCharacter == "")
+        ChangeDialogueName();
+        ChangeCharacterSprite();
+
+        void ChangeDialogueName()
         {
-            characterNameController.SetTransparencyOfCharacterName(false);
-            return;
+            if (newCharacter == "")
+            {
+                characterNameController.SetTransparencyOfCharacterName(false);
+                return;
+            }
+            // Else
+            characterNameController.SetTransparencyOfCharacterName(true);
+            characterNameController.SetCharacterName(newCharacter);
         }
-        // Else
-        characterNameController.SetTransparencyOfCharacterName(true);
-        characterNameController.SetCharacterName(newCharacter);
+        void ChangeCharacterSprite()
+        {
+            characterPortraitsController.ChangeActiveCharacter(newCharacter);
+        }
     }
 
     #endregion

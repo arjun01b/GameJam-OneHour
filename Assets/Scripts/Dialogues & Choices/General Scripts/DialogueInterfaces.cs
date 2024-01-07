@@ -25,5 +25,5 @@ public interface IInkTagActionable
     /// </summary>
     /// <param name="key">The type of action to be performed.</param>
     /// <param name="value">The value of the action. This value variable can be empty.</param>
-    public void ActOnInkTag(string key, string value = "");
+    public void ActOnTag(string key, string value = "");
 }
